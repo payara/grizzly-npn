@@ -86,7 +86,7 @@ final class ServerHandshaker extends Handshaker {
     private ProtocolVersion clientRequestedVersion;
 
     // client supported elliptic curves
-    private SupportedEllipticCurvesExtension requestedCurves;
+    private EllipticCurvesExtension requestedCurves;
 
     // the preferable signature algorithm used by ServerKeyExchange message
     SignatureAndHashAlgorithm preferableSignatureAlgorithm;
@@ -739,7 +739,7 @@ final class ServerHandshaker extends Handshaker {
                 throw new SSLException("Client did not resume a session");
             }
 
-            requestedCurves = (SupportedEllipticCurvesExtension)
+            requestedCurves = (EllipticCurvesExtension)
                     mesg.extensions.get(ExtensionType.EXT_ELLIPTIC_CURVES);
 
             // We only need to handle the "signature_algorithm" extension
@@ -772,7 +772,7 @@ final class ServerHandshaker extends Handshaker {
             session = new SSLSessionImpl(protocolVersion, CipherSuite.C_NULL,
                     getLocalSupportedSignAlgs(),
                     sslContext.getSecureRandom(),
-                    getHostAddressSE(), getPortSE());
+                    getHostAddressSE(), getPortSE(), false);
 
             if (protocolVersion.v >= ProtocolVersion.TLS12.v) {
                 if (peerSupportedSignAlgs != null) {
@@ -1492,7 +1492,7 @@ final class ServerHandshaker extends Handshaker {
     private boolean setupEphemeralECDHKeys() {
         int index = (requestedCurves != null) ?
                 requestedCurves.getPreferredCurve(algorithmConstraints) :
-                SupportedEllipticCurvesExtension.getActiveCurves(algorithmConstraints);
+                EllipticCurvesExtension.getActiveCurves(algorithmConstraints);
         if (index < 0) {
             // no match found, cannot use this ciphersuite
             return false;
@@ -1547,8 +1547,8 @@ final class ServerHandshaker extends Handshaker {
                 return false;
             }
             ECParameterSpec params = ((ECPublicKey)publicKey).getParams();
-            int id = SupportedEllipticCurvesExtension.getCurveIndex(params);
-            if ((id <= 0) || !SupportedEllipticCurvesExtension.isSupported(id) ||
+            int id = EllipticCurvesExtension.getCurveIndex(params);
+            if ((id <= 0) || !EllipticCurvesExtension.isSupported(id) ||
                     ((requestedCurves != null) && !requestedCurves.contains(id))) {
                 return false;
             }
