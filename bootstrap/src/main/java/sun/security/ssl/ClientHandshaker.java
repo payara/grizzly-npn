@@ -639,6 +639,7 @@ final class ClientHandshaker extends Handshaker {
                 }
             }
         }
+        
 
         if (resumingSession && session != null) {
             setHandshakeSessionSE(session);
@@ -697,7 +698,7 @@ final class ClientHandshaker extends Handshaker {
         // Create a new session, we need to do the full handshake
         session = new SSLSessionImpl(protocolVersion, cipherSuite,
                 getLocalSupportedSignAlgs(),
-                mesg.sessionId, getHostSE(), getPortSE());
+                mesg.sessionId, getHostSE(), getPortSE(), false);
         session.setRequestedServerNames(requestedServerNames);
         setHandshakeSessionSE(session);
         if (debug != null && Debug.isOn("handshake")) {
@@ -857,9 +858,9 @@ final class ClientHandshaker extends Handshaker {
                         ECParameterSpec params =
                                 ((ECPublicKey)publicKey).getParams();
                         int index =
-                                SupportedEllipticCurvesExtension.getCurveIndex(
+                                EllipticCurvesExtension.getCurveIndex(
                                         params);
-                        if (!SupportedEllipticCurvesExtension.isSupported(
+                        if (!EllipticCurvesExtension.isSupported(
                                 index)) {
                             publicKey = null;
                         }
