@@ -30,10 +30,10 @@
     <packaging>pom</packaging>
     <version>1.9-SNAPSHOT</version>
 
-    <url>http://grizzly.java.net</url>
+    <url>https://projects.eclipse.org/projects/ee4j.grizzly</url>
     <issueManagement>
         <system>JIRA</system>
-        <url>http://java.net/jira/browse/GRIZZLY</url>
+        <url>https://github.com/eclipse-ee4j/grizzly-npn/issues</url>
     </issueManagement>
     <mailingLists>
         <mailingList>
@@ -62,11 +62,11 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://java.net/grizzly~npn</connection>
+        <connection>scm:git:git@github.com:eclipse-ee4j/grizzly-npn.git</connection>
         <developerConnection>
-            scm:git:ssh://${user.name}@git.java.net/grizzly~npn
+            scm:git:git@github.com:eclipse-ee4j/grizzly-npn.git
         </developerConnection>
-        <url>http://java.net/projects/grizzly/sources/npn/show</url>
+        <url>https://github.com/eclipse-ee4j/grizzly-npn</url>
     </scm>
     <organization>
         <name>Oracle Corporation</name>
