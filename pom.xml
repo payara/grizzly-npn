@@ -19,9 +19,9 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>net.java</groupId>
-        <artifactId>jvnet-parent</artifactId>
-        <version>3</version>
+        <groupId>org.eclipse.ee4j</groupId>
+        <artifactId>project</artifactId>
+        <version>1.0.5</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -37,12 +37,8 @@
     </issueManagement>
     <mailingLists>
         <mailingList>
-            <name>Grizzly Dev List</name>
-            <archive>dev@grizzly.java.net</archive>
-        </mailingList>
-        <mailingList>
-            <name>Grizzly Support List</name>
-            <archive>users@grizzly.java.net</archive>
+            <name>Grizzly Developer List</name>
+            <archive>grizzly-dev@eclipse.org</archive>
         </mailingList>
     </mailingLists>
     <developers>
