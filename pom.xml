@@ -28,7 +28,7 @@
     <groupId>org.glassfish.grizzly</groupId>
     <artifactId>grizzly-npn</artifactId>
     <packaging>pom</packaging>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.9</version>
 
     <url>http://grizzly.java.net</url>
     <issueManagement>
@@ -65,7 +65,8 @@
             scm:git:ssh://${user.name}@git.java.net/grizzly~npn
         </developerConnection>
         <url>http://java.net/projects/grizzly/sources/npn/show</url>
-    </scm>
+      <tag>1.9</tag>
+  </scm>
     <organization>
         <name>Oracle Corporation</name>
         <url>http://www.oracle.com</url>
