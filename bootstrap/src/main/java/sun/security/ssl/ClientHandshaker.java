@@ -1186,7 +1186,7 @@ final class ClientHandshaker extends Handshaker {
                 if (protocolVersion.v >= ProtocolVersion.TLS12.v) {
                     preferableSignatureAlgorithm =
                             SignatureAndHashAlgorithm.getPreferableAlgorithm(
-                                    getPeerSupportedSignAlgs(),
+                                    getPeerSupportedSignAlgs(), algorithmConstraints,
                                     signingKey.getAlgorithm(), signingKey);
 
                     if (preferableSignatureAlgorithm == null) {
