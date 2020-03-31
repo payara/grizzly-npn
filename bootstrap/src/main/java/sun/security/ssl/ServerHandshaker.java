@@ -1339,7 +1339,7 @@ final class ServerHandshaker extends Handshaker {
                 if (protocolVersion.v >= ProtocolVersion.TLS12.v) {
                     preferableSignatureAlgorithm =
                             SignatureAndHashAlgorithm.getPreferableAlgorithm(
-                                    supportedSignAlgs, "RSA", privateKey);
+                                    supportedSignAlgs, algorithmConstraints, "RSA", privateKey);
                     if (preferableSignatureAlgorithm == null) {
                         if ((debug != null) && Debug.isOn("handshake")) {
                             System.out.println(
@@ -1362,7 +1362,7 @@ final class ServerHandshaker extends Handshaker {
                 if (protocolVersion.v >= ProtocolVersion.TLS12.v) {
                     preferableSignatureAlgorithm =
                             SignatureAndHashAlgorithm.getPreferableAlgorithm(
-                                    supportedSignAlgs, "RSA", privateKey);
+                                    supportedSignAlgs, algorithmConstraints, "RSA", privateKey);
                     if (preferableSignatureAlgorithm == null) {
                         if ((debug != null) && Debug.isOn("handshake")) {
                             System.out.println(
@@ -1382,7 +1382,7 @@ final class ServerHandshaker extends Handshaker {
                 if (protocolVersion.v >= ProtocolVersion.TLS12.v) {
                     preferableSignatureAlgorithm =
                             SignatureAndHashAlgorithm.getPreferableAlgorithm(
-                                    supportedSignAlgs, "DSA");
+                                    supportedSignAlgs, algorithmConstraints, "DSA");
                     if (preferableSignatureAlgorithm == null) {
                         if ((debug != null) && Debug.isOn("handshake")) {
                             System.out.println(
@@ -1405,7 +1405,7 @@ final class ServerHandshaker extends Handshaker {
                 if (protocolVersion.v >= ProtocolVersion.TLS12.v) {
                     preferableSignatureAlgorithm =
                             SignatureAndHashAlgorithm.getPreferableAlgorithm(
-                                    supportedSignAlgs, "ECDSA");
+                                    supportedSignAlgs, algorithmConstraints, "ECDSA");
                     if (preferableSignatureAlgorithm == null) {
                         if ((debug != null) && Debug.isOn("handshake")) {
                             System.out.println(
