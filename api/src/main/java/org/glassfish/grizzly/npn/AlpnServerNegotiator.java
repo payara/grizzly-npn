@@ -16,6 +16,9 @@
 
 package org.glassfish.grizzly.npn;
 
+import java.util.List;
+import java.util.function.BiFunction;
+
 import javax.net.ssl.SSLEngine;
 
 /**
@@ -28,7 +31,7 @@ import javax.net.ssl.SSLEngine;
  *
  * <p>
  */
-public interface AlpnServerNegotiator {
+public interface AlpnServerNegotiator extends BiFunction<SSLEngine, List<String>, String> {
 
     /**
      * <p>
@@ -42,5 +45,9 @@ public interface AlpnServerNegotiator {
      * @return the selected protocol.
      */
     String selectProtocol(SSLEngine sslEngine, String[] clientProtocols);
+
+    default String apply(SSLEngine sslEngine, List<String> clientProtocols) {
+        return selectProtocol(sslEngine, clientProtocols.toArray(new String[0]));
+    }
 
 }
