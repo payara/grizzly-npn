@@ -19,6 +19,7 @@ package sun.security.ssl;
 import java.io.*;
 import java.nio.*;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.security.*;
 
 import javax.crypto.BadPaddingException;
@@ -321,6 +322,8 @@ final public class SSLEngineImpl extends SSLEngine {
      */
     private boolean preferLocalCipherSuites = false;
 
+    private BiFunction<SSLEngine, List<String>, String> applicationProtocolSelector;
+
     /*
      * Class and subclass dynamic debugging support
      */
@@ -357,7 +360,7 @@ final public class SSLEngineImpl extends SSLEngine {
         }
 
         sslContext = ctx;
-        sess = SSLSessionImpl.nullSession;
+        sess = new SSLSessionImpl();
         handshakeSession = null;
 
         /*
@@ -484,6 +487,22 @@ final public class SSLEngineImpl extends SSLEngine {
         handshaker.setEnabledCipherSuites(enabledCipherSuites);
         handshaker.setEnableSessionCreation(enableSessionCreation);
     }
+
+
+    // Dummy implementation to avoid exceptions on newer JDK8 versions.
+    @Override
+    public synchronized void setHandshakeApplicationProtocolSelector(
+        BiFunction<SSLEngine, List<String>, String> selector) {
+        applicationProtocolSelector = selector;
+    }
+
+
+    // Dummy implementation to avoid exceptions on newer JDK8 versions.
+    @Override
+    public BiFunction<SSLEngine, List<String>, String> getHandshakeApplicationProtocolSelector() {
+        return this.applicationProtocolSelector;
+    }
+
 
     /*
      * Report the current status of the Handshaker
@@ -1173,7 +1192,7 @@ final public class SSLEngineImpl extends SSLEngine {
          * For now, force it to be large enough to handle any
          * valid SSL/TLS record.
          */
-        if (netData.remaining() < EngineOutputRecord.maxRecordSize) {
+        if (netData.remaining() < Record.maxRecordSize) {
             return new SSLEngineResult(
                     Status.BUFFER_OVERFLOW, getHSStatus(null), 0, 0);
         }

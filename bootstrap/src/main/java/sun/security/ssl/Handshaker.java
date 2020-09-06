@@ -169,7 +169,7 @@ abstract class Handshaker {
 
     // Could probably use a java.util.concurrent.atomic.AtomicReference
     // here instead of using this lock.  Consider changing.
-    private Object thrownLock = new Object();
+    private final Object thrownLock = new Object();
 
     // Class and subclass dynamic debugging support
     static final Debug debug = Debug.getInstance("ssl");
@@ -476,7 +476,7 @@ abstract class Handshaker {
     void setPeerSupportedSignAlgs(
             Collection<SignatureAndHashAlgorithm> algorithms) {
         peerSupportedSignAlgs =
-                new ArrayList<SignatureAndHashAlgorithm>(algorithms);
+                new ArrayList<>(algorithms);
     }
 
     Collection<SignatureAndHashAlgorithm> getPeerSupportedSignAlgs() {
@@ -1461,12 +1461,13 @@ abstract class Handshaker {
      */
     class DelegatedTask<E> implements Runnable {
 
-        private PrivilegedExceptionAction<E> pea;
+        private final PrivilegedExceptionAction<E> pea;
 
         DelegatedTask(PrivilegedExceptionAction<E> pea) {
             this.pea = pea;
         }
 
+        @Override
         public void run() {
             synchronized (engine) {
                 try {
@@ -1483,7 +1484,7 @@ abstract class Handshaker {
     }
 
     private <T> void delegateTask(PrivilegedExceptionAction<T> pea) {
-        delegatedTask = new DelegatedTask<T>(pea);
+        delegatedTask = new DelegatedTask<>(pea);
         taskDelegated = false;
         thrown = null;
     }
