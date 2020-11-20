@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, 2017 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates and others.
+ * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -12,9 +13,15 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ *
+ * Contributors:
+ *   Payara Services - Make class JDK 9 Compatible
  */
 
 package org.glassfish.grizzly.npn;
+
+import java.util.List;
+import java.util.function.BiFunction;
 
 import javax.net.ssl.SSLEngine;
 
@@ -28,7 +35,7 @@ import javax.net.ssl.SSLEngine;
  *
  * <p>
  */
-public interface AlpnServerNegotiator {
+public interface AlpnServerNegotiator extends BiFunction<SSLEngine, List<String>, String> {
 
     /**
      * <p>
@@ -42,5 +49,9 @@ public interface AlpnServerNegotiator {
      * @return the selected protocol.
      */
     String selectProtocol(SSLEngine sslEngine, String[] clientProtocols);
+
+    default String apply(SSLEngine sslEngine, List<String> clientProtocols) {
+        return selectProtocol(sslEngine, clientProtocols.toArray(new String[0]));
+    }
 
 }
