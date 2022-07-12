@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
+// Portions Copyright [2022] [Payara Foundation and/or its affiliates]
 package org.glassfish.grizzly.npn;
 
 import javax.net.ssl.SSLEngine;
@@ -25,14 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NegotiationSupport {
 
-    private static final ConcurrentHashMap<SSLEngine, ServerSideNegotiator> serverSideNegotiators =
-            new ConcurrentHashMap<SSLEngine, ServerSideNegotiator>(4);
-    private static final ConcurrentHashMap<SSLEngine, ClientSideNegotiator> clientSideNegotiators =
-                new ConcurrentHashMap<SSLEngine, ClientSideNegotiator>(4);
-    private static final ConcurrentHashMap<SSLEngine, AlpnServerNegotiator> alpnServerNegotiators =
-                new ConcurrentHashMap<SSLEngine, AlpnServerNegotiator>(4);
-        private static final ConcurrentHashMap<SSLEngine, AlpnClientNegotiator> alpnClientNegotiators =
-                    new ConcurrentHashMap<SSLEngine, AlpnClientNegotiator>(4);
+    private static final ConcurrentHashMap<String, ServerSideNegotiator> serverSideNegotiators =
+            new ConcurrentHashMap<>(4);
+    private static final ConcurrentHashMap<String, ClientSideNegotiator> clientSideNegotiators =
+                new ConcurrentHashMap<>(4);
+    private static final ConcurrentHashMap<String, AlpnServerNegotiator> alpnServerNegotiators =
+                new ConcurrentHashMap<>(4);
+        private static final ConcurrentHashMap<String, AlpnClientNegotiator> alpnClientNegotiators =
+                    new ConcurrentHashMap<>(4);
 
     /**
      * Add a {@link ServerSideNegotiator} that will be invoked when handshake
@@ -40,7 +40,7 @@ public class NegotiationSupport {
      */
     public static void addNegotiator(final SSLEngine engine,
                                      final ServerSideNegotiator serverSideNegotiator) {
-        serverSideNegotiators.putIfAbsent(engine, serverSideNegotiator);
+        serverSideNegotiators.putIfAbsent(generateKey(engine), serverSideNegotiator);
     }
 
     /**
@@ -49,7 +49,7 @@ public class NegotiationSupport {
      */
     public static void addNegotiator(final SSLEngine engine,
                                      final ClientSideNegotiator clientSideNegotiator) {
-        clientSideNegotiators.putIfAbsent(engine, clientSideNegotiator);
+        clientSideNegotiators.putIfAbsent(generateKey(engine), clientSideNegotiator);
     }
 
     /**
@@ -58,7 +58,7 @@ public class NegotiationSupport {
      */
     public static void addNegotiator(final SSLEngine engine,
                                      final AlpnServerNegotiator serverSideNegotiator) {
-        alpnServerNegotiators.putIfAbsent(engine, serverSideNegotiator);
+        alpnServerNegotiators.putIfAbsent(generateKey(engine), serverSideNegotiator);
     }
 
     /**
@@ -67,7 +67,7 @@ public class NegotiationSupport {
      */
     public static void addNegotiator(final SSLEngine engine,
                                      final AlpnClientNegotiator clientSideNegotiator) {
-        alpnClientNegotiators.putIfAbsent(engine, clientSideNegotiator);
+        alpnClientNegotiators.putIfAbsent(generateKey(engine), clientSideNegotiator);
     }
 
     /**
@@ -75,7 +75,7 @@ public class NegotiationSupport {
      * {@link SSLEngine}.
      */
     public static ClientSideNegotiator removeClientNegotiator(final SSLEngine engine) {
-        return clientSideNegotiators.remove(engine);
+        return clientSideNegotiators.remove(generateKey(engine));
     }
 
     /**
@@ -83,7 +83,7 @@ public class NegotiationSupport {
      * {@link SSLEngine}.
      */
     public static AlpnClientNegotiator removeAlpnClientNegotiator(final SSLEngine engine) {
-        return alpnClientNegotiators.remove(engine);
+        return alpnClientNegotiators.remove(generateKey(engine));
     }
 
     /**
@@ -91,7 +91,7 @@ public class NegotiationSupport {
      * {@link SSLEngine}.
      */
     public static ServerSideNegotiator removeServerNegotiator(final SSLEngine engine) {
-        return serverSideNegotiators.remove(engine);
+        return serverSideNegotiators.remove(generateKey(engine));
     }
 
     /**
@@ -99,7 +99,7 @@ public class NegotiationSupport {
      * {@link SSLEngine}.
      */
     public static AlpnServerNegotiator removeAlpnServerNegotiator(final SSLEngine engine) {
-        return alpnServerNegotiators.remove(engine);
+        return alpnServerNegotiators.remove(generateKey(engine));
     }
 
     /**
@@ -107,7 +107,7 @@ public class NegotiationSupport {
      * {@link SSLEngine}.
      */
     public static ServerSideNegotiator getServerSideNegotiator(final SSLEngine engine) {
-        return serverSideNegotiators.get(engine);
+        return serverSideNegotiators.get(generateKey(engine));
     }
 
     /**
@@ -115,7 +115,7 @@ public class NegotiationSupport {
      * {@link SSLEngine}.
      */
     public static ClientSideNegotiator getClientSideNegotiator(final SSLEngine engine) {
-        return clientSideNegotiators.get(engine);
+        return clientSideNegotiators.get(generateKey(engine));
     }
 
     /**
@@ -123,7 +123,7 @@ public class NegotiationSupport {
      * {@link SSLEngine}.
      */
     public static AlpnServerNegotiator getAlpnServerNegotiator(final SSLEngine engine) {
-        return alpnServerNegotiators.get(engine);
+        return alpnServerNegotiators.get(generateKey(engine));
     }
 
     /**
@@ -131,7 +131,19 @@ public class NegotiationSupport {
      * {@link SSLEngine}.
      */
     public static AlpnClientNegotiator getAlpnClientNegotiator(final SSLEngine engine) {
-        return alpnClientNegotiators.get(engine);
+        return alpnClientNegotiators.get(generateKey(engine));
+    }
+
+    /**
+     * This generates a key for the SSLEngine
+     * @param engine instance of type SSLEngine used for the ALPN implementation
+     * @return String with the key formed with Class Name and hashCode
+     */
+    private static String generateKey(SSLEngine engine){
+        if(engine != null) {
+            return engine.getClass().getName() + "@" + Integer.toHexString(engine.hashCode());
+        }
+        return null;
     }
 
 }
