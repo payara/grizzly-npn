@@ -607,17 +607,15 @@ final class ClientHandshaker extends Handshaker {
                             throw new SSLProtocolException("Server resumed" +
                                     " session with wrong subject identity");
                         } else {
-                            if (debug != null && Debug.isOn("session")) {
+                            if (debug != null && Debug.isOn("session"))
                                 System.out.println("Subject identity is same");
-                            }
                         }
                     } else {
-                        if (debug != null && Debug.isOn("session")) {
+                        if (debug != null && Debug.isOn("session"))
                             System.out.println("Kerberos credentials are not" +
                                     " present in the current Subject; check if " +
                                     " javax.security.auth.useSubjectAsCreds" +
                                     " system property has been set to false");
-                        }
                         throw new SSLProtocolException
                                 ("Server resumed session with no subject");
                     }
@@ -852,10 +850,10 @@ final class ClientHandshaker extends Handshaker {
 
             ArrayList<String> keytypesTmp = new ArrayList<>(4);
 
-            for (byte type : certRequest.types) {
+            for (int i = 0; i < certRequest.types.length; i++) {
                 String typeName;
 
-                switch (type) {
+                switch (certRequest.types[i]) {
                     case CertificateRequest.cct_rsa_sign:
                         typeName = "RSA";
                         break;
@@ -1322,11 +1320,13 @@ final class ClientHandshaker extends Handshaker {
     }
 
 
-    /**
+    /*
      * Returns a ClientHello message to kickstart renegotiations
      */
     @Override
     HandshakeMessage getKickstartMessage() throws SSLException {
+        // session ID of the ClientHello message
+        SessionId sessionId = SSLSessionImpl.nullSession.getSessionId();
 
         // a list of cipher suites sent by the client
         CipherSuiteList cipherSuites = getActiveCipherSuites();
@@ -1369,7 +1369,6 @@ final class ClientHandshaker extends Handshaker {
             }
         }
 
-        SessionId sessionId = new SessionId(false, null);
         if (session != null) {
             CipherSuite sessionSuite = session.getSuite();
             ProtocolVersion sessionVersion = session.getProtocolVersion();
