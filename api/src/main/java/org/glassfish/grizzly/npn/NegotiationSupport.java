@@ -26,13 +26,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NegotiationSupport {
 
     private static final ConcurrentHashMap<String, ServerSideNegotiator> serverSideNegotiators =
-            new ConcurrentHashMap<>(4);
+            new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, ClientSideNegotiator> clientSideNegotiators =
-                new ConcurrentHashMap<>(4);
+                new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, AlpnServerNegotiator> alpnServerNegotiators =
-                new ConcurrentHashMap<>(4);
+                new ConcurrentHashMap<>();
         private static final ConcurrentHashMap<String, AlpnClientNegotiator> alpnClientNegotiators =
-                    new ConcurrentHashMap<>(4);
+                    new ConcurrentHashMap<>();
 
     /**
      * Add a {@link ServerSideNegotiator} that will be invoked when handshake
